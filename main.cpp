@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <deque>
+#include <functional>
 #include <iostream> // cout
 #include <ostream>
 #include <queue>
@@ -9,6 +10,7 @@
 #include <vector>
 #include <array>
 #include <cassert>
+#include <random>
 
 namespace detail
 {
@@ -83,6 +85,28 @@ public:
         data_.at(r).at(c) = v;
     }
 
+    void Set(Position pos, Tile v)
+    {
+        data_.at(pos.y).at(pos.x) = v;
+    }
+
+    auto Get(Position pos)
+    {
+        return data_.at(pos.y).at(pos.x);
+    }
+
+    void ForEach(std::function<void(Tile&, size_t, size_t)> f)
+    {
+        for (decltype(data_.size()) r = 0; r < data_.size(); ++r)
+        {
+            auto row_vec = data_[r];
+            for (decltype(row_vec.size()) c = 0; c < row_vec.size(); ++c)
+            {
+                f(row_vec[c], r, c);
+            }
+        }
+    }
+
     // Debug
     void Print() const
     {
@@ -96,20 +120,41 @@ public:
         }
     }
 
+    Position RandomTile(T v)
+    {
+        std::vector<Position> all;
+        ForEach([v, &all](auto element, auto r, auto c) {
+            if (element == v)
+            {
+                all.push_back(Position(c, r));
+            }
+        });
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, all.size() - 1);
+        return all[dis(gen)];
+    }
+
 private:
     std::vector<Row> data_;
 };
 
-struct Position
+namespace detail
 {
-    Position() = default;
-    Position(size_t x, size_t y) :
-        x(x), y(y)
+
+    auto Draw(size_t x, size_t y, Tile v)
     {
+        std::cout << "\033[" << y << ";" << x << "H" << TileToChar(v) << std::flush;
     }
-    size_t x{};
-    size_t y{};
-};
+
+    auto Draw(Position pos, Tile v)
+    {
+        return Draw(pos.x, pos.y, v);
+    }
+
+}
+
 
 int main()
 {
@@ -125,6 +170,12 @@ int main()
     size_t initial_pos_x = console_size_x / 2;
     size_t initial_pos_y = console_size_y / 2;
     map.Set(initial_pos_y, initial_pos_x, Tile::Snake);
+    detail::Draw(initial_pos_x, initial_pos_y, Tile::Snake);
+
+    // random food
+    auto random_pos = map.RandomTile(Tile::Open);
+    map.Set(random_pos, Tile::Food);
+    detail::Draw(random_pos, Tile::Food);
 
     std::deque<Position> snake;
     snake.push_front(Position(initial_pos_x, initial_pos_y));
