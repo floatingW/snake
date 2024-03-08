@@ -161,7 +161,7 @@ public:
         }
     }
 
-    Position RandomTile(T v) const
+    Position RandomPosition(T v) const
     {
         std::vector<Position> all;
         ForEach([v, &all](auto element, auto r, auto c) {
@@ -218,7 +218,7 @@ int main()
     detail::Draw(initial_pos_x, initial_pos_y, Tile::Snake);
 
     // random food
-    auto random_pos = map.RandomTile(Tile::Open);
+    auto random_pos = map.RandomPosition(Tile::Open);
     map.Set(random_pos, Tile::Food);
     detail::Draw(random_pos, Tile::Food);
 
@@ -248,7 +248,7 @@ int main()
             detail::Draw(next_pos, Tile::Snake);
 
             // next food
-            auto random_pos = map.RandomTile(Tile::Open);
+            auto random_pos = map.RandomPosition(Tile::Open);
             map.Set(random_pos, Tile::Food);
             detail::Draw(random_pos, Tile::Food);
         }
