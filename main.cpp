@@ -1,17 +1,15 @@
 #include <cstddef>
 #include <deque>
-#include <functional>
+#include <functional> // function
 #include <iostream> // cout
-#include <ostream>
-#include <queue>
 #include <sys/ioctl.h> // ioctl()
 #include <utility> // make_pair()
 #include <vector>
 #include <array>
 #include <cassert>
 #include <random>
-#include <chrono>
-#include <thread>
+#include <chrono> // milliseconds
+#include <thread> // sleepfor()
 
 namespace detail
 {
