@@ -95,8 +95,6 @@ struct Position
     size_t y{};
 };
 
-std::deque<Position> snake;
-
 int main()
 {
     // init console
@@ -111,6 +109,8 @@ int main()
     size_t initial_pos_x = console_size_x / 2;
     size_t initial_pos_y = console_size_y / 2;
     map.Set(initial_pos_y, initial_pos_x, Tile::Snake);
+
+    std::deque<Position> snake;
     snake.push_front(Position(initial_pos_x, initial_pos_y));
 
     // initial direction
