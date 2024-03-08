@@ -136,7 +136,7 @@ public:
         return data_.at(pos.y).at(pos.x);
     }
 
-    void ForEach(std::function<void(Tile&, size_t, size_t)> f)
+    void ForEach(std::function<void(Tile, size_t, size_t)> f) const
     {
         for (decltype(data_.size()) r = 0; r < data_.size(); ++r)
         {
@@ -161,7 +161,7 @@ public:
         }
     }
 
-    Position RandomTile(T v)
+    Position RandomTile(T v) const
     {
         std::vector<Position> all;
         ForEach([v, &all](auto element, auto r, auto c) {
