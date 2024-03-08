@@ -8,6 +8,7 @@
 #include <utility> // make_pair()
 #include <vector>
 #include <array>
+#include <cassert>
 
 namespace detail
 {
@@ -38,9 +39,24 @@ enum class Tile
     Food
 };
 
-std::array<char, sizeof(Tile)> TileChar{
-    { 'O', 'S', 'F' }
-};
+namespace detail
+{
+    auto TileToChar(Tile v)
+    {
+        switch (v)
+        {
+        case Tile::Open:
+            return 'O';
+        case Tile::Snake:
+            return 'S';
+        case Tile::Food:
+            return 'F';
+        default:
+            assert(false);
+            return ' ';
+        }
+    }
+}
 
 enum class Direction
 {
@@ -74,7 +90,7 @@ public:
         {
             for (auto v : r)
             {
-                std::cout << TileChar.at(static_cast<size_t>(v));
+                std::cout << detail::TileToChar(v);
             }
             std::cout << std::endl;
         }
