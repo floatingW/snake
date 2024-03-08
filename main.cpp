@@ -199,6 +199,12 @@ namespace detail
         return pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height;
     }
 
+    void PutRandomFood(Matrix<Tile>& map)
+    {
+        auto random_pos = map.RandomPosition(Tile::Open);
+        map.Set(random_pos, Tile::Food);
+        detail::Draw(random_pos, Tile::Food);
+    }
 }
 
 int main()
@@ -218,9 +224,7 @@ int main()
     detail::Draw(initial_pos_x, initial_pos_y, Tile::Snake);
 
     // random food
-    auto random_pos = map.RandomPosition(Tile::Open);
-    map.Set(random_pos, Tile::Food);
-    detail::Draw(random_pos, Tile::Food);
+    detail::PutRandomFood(map);
 
     std::deque<Position> snake;
     snake.push_front(Position(initial_pos_x, initial_pos_y));
@@ -248,9 +252,7 @@ int main()
             detail::Draw(next_pos, Tile::Snake);
 
             // next food
-            auto random_pos = map.RandomPosition(Tile::Open);
-            map.Set(random_pos, Tile::Food);
-            detail::Draw(random_pos, Tile::Food);
+            detail::PutRandomFood(map);
         }
         else
         {
