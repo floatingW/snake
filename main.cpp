@@ -52,14 +52,14 @@ namespace detail
         switch (v)
         {
         case Tile::Open:
-            return 'O';
+            return ' ';
         case Tile::Snake:
-            return 'S';
+            return '*';
         case Tile::Food:
-            return 'F';
+            return '@';
         default:
             assert(false);
-            return ' ';
+            return '#';
         }
     }
 }
