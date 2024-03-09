@@ -3,6 +3,7 @@
 #include <format>
 #include <functional> // function
 #include <iostream> // cout
+#include <optional>
 #include <sys/ioctl.h> // ioctl()
 #include <utility> // make_pair()
 #include <vector>
@@ -188,6 +189,24 @@ namespace detail
         map.Set(random_pos, Tile::Food);
         detail::Draw(random_pos, Tile::Food);
     }
+
+    std::optional<Direction> KeyToDirection(int ch)
+    {
+        switch (ch)
+        {
+        case 'w':
+            return Direction::Up;
+        case 's':
+            return Direction::Down;
+        case 'a':
+            return Direction::Left;
+        case 'd':
+            return Direction::Right;
+        }
+
+        return {};
+    }
+
 }
 
 int main()
@@ -201,6 +220,7 @@ int main()
         cbreak();
         noecho();
         intrflush(stdscr, FALSE);
+        nodelay(stdscr, true);
 
         int row, col;
         getmaxyx(stdscr, row, col);
@@ -231,6 +251,12 @@ int main()
 
     while (true)
     {
+        auto optional_dir = detail::KeyToDirection(getch());
+        if (optional_dir.has_value())
+        {
+            dir = optional_dir.value();
+        }
+
         Position current_pos = snake.front();
         Position next_pos = current_pos.Step(dir);
 
