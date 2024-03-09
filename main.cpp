@@ -71,10 +71,10 @@ struct Position
         switch (dir)
         {
         case Direction::Down:
-            --p.y;
+            ++p.y;
             break;
         case Direction::Up:
-            ++p.y;
+            --p.y;
             break;
         case Direction::Left:
             --p.x;
