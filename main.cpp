@@ -10,28 +10,10 @@
 #include <random>
 #include <chrono> // milliseconds
 #include <thread> // sleepfor()
+#include <ncurses.h>
 
 namespace detail
 {
-    void SetCursorVisibility(bool visible)
-    {
-        if (visible)
-        {
-            std::cout << "\033[?25h";
-        }
-        else
-        {
-            std::cout << "\033[?25l";
-        }
-    }
-
-    auto GetConsoleWinSize()
-    {
-        struct winsize w;
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-        return std::make_pair(w.ws_row, w.ws_col);
-    }
-
     auto TickToMilliSeconds(unsigned tick_per_sec)
     {
         return static_cast<unsigned>(1.0 / tick_per_sec * 1000);
@@ -210,9 +192,20 @@ namespace detail
 int main()
 {
     // init console
-    auto [console_size_y, console_size_x] = detail::GetConsoleWinSize();
+    auto console_size_y = 0;
+    auto console_size_x = 0;
+
+    {
+        int row, col;
+        initscr();
+        getmaxyx(stdscr, row, col);
+        refresh();
+
+        console_size_x = col;
+        console_size_y = row;
+    }
+
     std::cout << "console size:" << console_size_y << ":" << console_size_x << std::endl;
-    detail::SetCursorVisibility(false);
 
     // map
     Matrix<Tile> map(console_size_y, console_size_x);
