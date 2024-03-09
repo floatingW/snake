@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <deque>
+#include <format>
 #include <functional> // function
 #include <iostream> // cout
 #include <sys/ioctl.h> // ioctl()
@@ -168,7 +169,7 @@ namespace detail
 
     auto Draw(size_t x, size_t y, Tile v)
     {
-        std::cout << "\033[" << y << ";" << x << "H" << TileToChar(v) << std::flush;
+        mvprintw(y, x, "%c", TileToChar(v));
     }
 
     auto Draw(Position pos, Tile v)
@@ -196,16 +197,19 @@ int main()
     auto console_size_x = 0;
 
     {
-        int row, col;
         initscr();
-        getmaxyx(stdscr, row, col);
-        refresh();
+        cbreak();
+        noecho();
+        intrflush(stdscr, FALSE);
 
+        int row, col;
+        getmaxyx(stdscr, row, col);
         console_size_x = col;
         console_size_y = row;
     }
 
-    std::cout << "console size:" << console_size_y << ":" << console_size_x << std::endl;
+    printw("%s", std::format("console size: {}:{}\n", console_size_y, console_size_x).c_str());
+    refresh();
 
     // map
     Matrix<Tile> map(console_size_y, console_size_x);
@@ -232,7 +236,9 @@ int main()
 
         if (detail::IsOutOfBoundary(next_pos, console_size_x, console_size_y))
         {
-            std::cout << "End" << std::endl;
+            move(0, 0);
+            printw("%s", "End\n");
+            refresh();
             break;
         }
 
@@ -259,6 +265,7 @@ int main()
             snake.pop_back();
         }
 
+        refresh();
         std::this_thread::sleep_for(std::chrono::milliseconds(detail::TickToMilliSeconds(2)));
     }
 
