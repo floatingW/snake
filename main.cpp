@@ -207,6 +207,22 @@ namespace detail
         return {};
     }
 
+    // some ncurses routine
+    void InitScreen()
+    {
+        initscr();
+        cbreak();
+        noecho();
+        intrflush(stdscr, FALSE);
+        nodelay(stdscr, true);
+        curs_set(0);
+    }
+
+    void ResetScreen()
+    {
+        endwin();
+    }
+
 }
 
 int main()
@@ -215,13 +231,8 @@ int main()
     auto console_size_y = 0;
     auto console_size_x = 0;
 
+    detail::InitScreen();
     {
-        initscr();
-        cbreak();
-        noecho();
-        intrflush(stdscr, FALSE);
-        nodelay(stdscr, true);
-
         int row, col;
         getmaxyx(stdscr, row, col);
         console_size_x = col;
@@ -251,10 +262,18 @@ int main()
 
     while (true)
     {
-        auto optional_dir = detail::KeyToDirection(getch());
-        if (optional_dir.has_value())
         {
-            dir = optional_dir.value();
+            auto ch = getch();
+            if (ch == 'q')
+            {
+                break;
+            }
+
+            auto optional_dir = detail::KeyToDirection(ch);
+            if (optional_dir.has_value())
+            {
+                dir = optional_dir.value();
+            }
         }
 
         Position current_pos = snake.front();
@@ -295,5 +314,6 @@ int main()
         std::this_thread::sleep_for(std::chrono::milliseconds(detail::TickToMilliSeconds(2)));
     }
 
+    detail::ResetScreen();
     return 0;
 }
