@@ -1,3 +1,5 @@
 /build
 /.cache
+cpp_check_warning_output
+clang_check_warning_output
 
