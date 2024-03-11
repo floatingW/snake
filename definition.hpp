@@ -54,7 +54,10 @@ namespace definition
     enum class Tile
     {
         Open,
-        Snake,
+        SnakeUp,
+        SnakeDown,
+        SnakeLeft,
+        SnakeRight,
         Food
     };
 

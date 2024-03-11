@@ -28,8 +28,14 @@ namespace detail
         {
         case Tile::Open:
             return ' ';
-        case Tile::Snake:
-            return '*';
+        case Tile::SnakeUp:
+            return '^';
+        case Tile::SnakeDown:
+            return 'v';
+        case Tile::SnakeLeft:
+            return '<';
+        case Tile::SnakeRight:
+            return '>';
         case Tile::Food:
             return '@';
         default:
@@ -77,6 +83,23 @@ namespace detail
         return {};
     }
 
+    std::optional<Tile> DirectionToSnakeTile(Direction dir)
+    {
+        switch (dir)
+        {
+        case Direction::Up:
+            return Tile::SnakeUp;
+        case Direction::Down:
+            return Tile::SnakeDown;
+        case Direction::Left:
+            return Tile::SnakeLeft;
+        case Direction::Right:
+            return Tile::SnakeRight;
+        }
+
+        return {};
+    }
+
 }
 
 int main()
@@ -98,20 +121,25 @@ int main()
     // map
     Matrix map(console_size_y, console_size_x);
 
+    // initial direction
+    Direction dir{ Direction::Left };
+
     // initial pos
     int initial_pos_x = console_size_x / 2;
     int initial_pos_y = console_size_y / 2;
-    map.Set(initial_pos_y, initial_pos_x, Tile::Snake);
-    detail::Draw(initial_pos_x, initial_pos_y, Tile::Snake);
+
+    {
+        auto tile = detail::DirectionToSnakeTile(dir);
+        assert(tile.has_value());
+        map.Set(initial_pos_y, initial_pos_x, tile.value());
+        detail::Draw(initial_pos_x, initial_pos_y, tile.value());
+    }
 
     // random food
     detail::PutRandomFood(map);
 
     std::deque<Position> snake;
     snake.push_front(Position(initial_pos_x, initial_pos_y));
-
-    // initial direction
-    Direction dir{ Direction::Left };
 
     while (true)
     {
@@ -140,24 +168,27 @@ int main()
         // step forward
         snake.push_front(next_pos);
 
-        if (map.Get(next_pos) == Tile::Food)
         {
-            map.Set(next_pos, Tile::Snake);
-            detail::Draw(next_pos, Tile::Snake);
+            auto snake_front_tile = detail::DirectionToSnakeTile(dir);
+            assert(snake_front_tile.has_value());
 
-            // next food
-            detail::PutRandomFood(map);
-        }
-        else
-        {
-            // An open tile
+            if (map.Get(next_pos) == Tile::Food)
+            {
+                map.Set(next_pos, snake_front_tile.value());
+                detail::Draw(next_pos, snake_front_tile.value());
+                // next food
+                detail::PutRandomFood(map);
+            }
+            else
+            {
+                // An open tile
+                map.Set(next_pos, snake_front_tile.value());
+                detail::Draw(next_pos, snake_front_tile.value());
+                map.Set(snake.back(), Tile::Open);
+                detail::Draw(snake.back(), Tile::Open);
 
-            map.Set(next_pos, Tile::Snake);
-            detail::Draw(next_pos, Tile::Snake);
-            map.Set(snake.back(), Tile::Open);
-            detail::Draw(snake.back(), Tile::Open);
-
-            snake.pop_back();
+                snake.pop_back();
+            }
         }
 
         utils::Refresh();
