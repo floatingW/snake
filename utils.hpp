@@ -1,11 +1,7 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
-#include <cstdarg>
-
 #include <ncurses.h>
-
-#include "definition.hpp"
 
 namespace utils
 {

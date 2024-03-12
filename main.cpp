@@ -1,6 +1,4 @@
 #include <deque>
-#include <format>
-#include <iostream> // cout
 #include <optional>
 #include <cassert>
 #include <chrono> // milliseconds
