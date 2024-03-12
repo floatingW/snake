@@ -19,4 +19,4 @@ run-clang-tidy \
 -j 8 \
 -p build \
 -export-fixes $clang_check_output \
--checks=-\*,bugprone-\*,clang-analyzer-\*,cppcoreguidelines-\*,hicpp-\*,modernize-\*,performance-\*,portability-\*,readability-\*
+-checks=-\*,bugprone-\*,clang-analyzer-\*,cppcoreguidelines-\*,hicpp-\*,modernize-\*,performance-\*,portability-\*,readability-\*,-readability-identifier-length
