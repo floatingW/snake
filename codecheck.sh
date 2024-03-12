@@ -7,7 +7,6 @@ cppcheck \
 --project=build/compile_commands.json \
 --enable=warning,style,unusedFunction \
 --std=c++20 \
--j 8 \
 --output-file=$cpp_check_output \
 --xml
 
