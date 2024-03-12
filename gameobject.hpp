@@ -59,8 +59,7 @@ namespace game_object
                 }
             });
 
-            std::random_device rd;
-            std::mt19937 gen(rd());
+            std::mt19937 gen(seed_);
             std::uniform_int_distribution<> dis(0, all.size() - 1);
             return all[dis(gen)];
         }
@@ -70,10 +69,16 @@ namespace game_object
             return pos.x < 0 || pos.x > static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y > static_cast<decltype(pos.y)>(row_);
         }
 
+        void SetSeed(std::mt19937::result_type seed) noexcept
+        {
+            seed_ = seed;
+        }
+
     private:
         size_t row_{};
         size_t col_{};
         std::vector<Row> data_;
+        std::mt19937::result_type seed_{ 42 };
     };
 
     class PlayGround
