@@ -95,18 +95,7 @@ namespace detail
 auto main() -> int
 {
     // init console
-    int console_size_y{};
-    int console_size_x{};
-
-    utils::InitScreen();
-    {
-        int row{};
-        int col{};
-        getmaxyx(stdscr, row, col);
-        console_size_x = col;
-        console_size_y = row;
-    }
-
+    auto [console_size_x, console_size_y] = utils::InitScreen();
     utils::Refresh();
 
     game_object::PlayGround pg{ console_size_y, console_size_x };

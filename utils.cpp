@@ -5,7 +5,7 @@ void utils::ResetScreen() noexcept
     endwin();
 }
 
-void utils::InitScreen() noexcept
+auto utils::InitScreen() noexcept -> std::pair<int, int>
 {
     initscr();
     cbreak();
@@ -13,6 +13,12 @@ void utils::InitScreen() noexcept
     intrflush(stdscr, FALSE);
     nodelay(stdscr, true);
     curs_set(0);
+
+    int console_size_y{};
+    int console_size_x{};
+    getmaxyx(stdscr, console_size_y, console_size_x);
+
+    return { console_size_x, console_size_y };
 }
 
 void utils::Refresh() noexcept

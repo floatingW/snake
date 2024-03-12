@@ -2,12 +2,13 @@
 #define __UTILS_HPP__
 
 #include <ncurses.h>
+#include <utility>
 
 namespace utils
 {
 
     // some ncurses routine
-    void InitScreen() noexcept;
+    std::pair<int, int> InitScreen() noexcept;
     void ResetScreen() noexcept;
     void Refresh() noexcept;
 
