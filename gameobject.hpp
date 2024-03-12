@@ -1,6 +1,7 @@
 #ifndef __GAMEOBJECT_HPP__
 #define __GAMEOBJECT_HPP__
 
+#include <cstddef>
 #include <vector>
 #include <random>
 #include <functional> // function
@@ -17,7 +18,7 @@ namespace game_object
     public:
         Matrix() = delete;
         Matrix(size_t row, size_t col) :
-            data_(row, Row(col))
+            row_(row), col_(col), data_(row, Row(col))
         {
         }
 
@@ -31,17 +32,17 @@ namespace game_object
             data_.at(pos.y).at(pos.x) = v;
         }
 
-        auto Get(definition::Position pos)
+        auto Get(definition::Position pos) const
         {
             return data_.at(pos.y).at(pos.x);
         }
 
         void ForEach(std::function<void(T, size_t, size_t)> f) const
         {
-            for (decltype(data_.size()) r = 0; r < data_.size(); ++r)
+            for (size_t r = 0; r < data_.size(); ++r)
             {
                 auto row_vec = data_[r];
-                for (decltype(row_vec.size()) c = 0; c < row_vec.size(); ++c)
+                for (size_t c = 0; c < row_vec.size(); ++c)
                 {
                     f(row_vec[c], r, c);
                 }
@@ -64,9 +65,56 @@ namespace game_object
             return all[dis(gen)];
         }
 
+        bool IsOutOfBoundary(definition::Position pos) const
+        {
+            return pos.x < 0 || pos.x > static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y > static_cast<decltype(pos.y)>(row_);
+        }
+
     private:
+        size_t row_{};
+        size_t col_{};
         std::vector<Row> data_;
     };
+
+    class PlayGround
+    {
+    public:
+        template<typename... Ts>
+        PlayGround(Ts... args) :
+            map(args...)
+        {
+        }
+
+        template<typename... Ts>
+        void Set(Ts... args)
+        {
+            map.Set(args...);
+        }
+
+        template<typename... Ts>
+        auto Get(Ts... args) const
+        {
+            return map.Get(args...);
+        }
+
+        definition::Position PutRandomFood()
+        {
+            auto random_pos = map.RandomPosition(Tile::Open);
+            map.Set(random_pos, Tile::Food);
+            return random_pos;
+        }
+
+        bool IsOutOfBoundary(definition::Position pos) const
+        {
+            return map.IsOutOfBoundary(pos);
+        }
+
+    private:
+        using Tile = definition::Tile;
+        using Matrix = Matrix<definition::Tile>;
+        Matrix map;
+    };
+
 }
 
 #endif // __GAMEOBJECT_HPP__

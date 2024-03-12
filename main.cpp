@@ -54,18 +54,6 @@ namespace detail
         return Draw(pos.x, pos.y, v);
     }
 
-    auto IsOutOfBoundary(Position pos, int width, int height)
-    {
-        return pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height;
-    }
-
-    void PutRandomFood(Matrix& map)
-    {
-        auto random_pos = map.RandomPosition(Tile::Open);
-        map.Set(random_pos, Tile::Food);
-        detail::Draw(random_pos, Tile::Food);
-    }
-
     std::optional<Direction> KeyToDirection(int ch)
     {
         switch (ch)
@@ -118,8 +106,7 @@ int main()
 
     utils::Refresh();
 
-    // map
-    Matrix map(console_size_y, console_size_x);
+    game_object::PlayGround pg{ console_size_y, console_size_x };
 
     // initial direction
     Direction dir{ Direction::Left };
@@ -131,12 +118,14 @@ int main()
     {
         auto tile = detail::DirectionToSnakeTile(dir);
         assert(tile.has_value());
-        map.Set(initial_pos_y, initial_pos_x, tile.value());
+        pg.Set(initial_pos_y, initial_pos_x, tile.value());
         detail::Draw(initial_pos_x, initial_pos_y, tile.value());
     }
 
-    // random food
-    detail::PutRandomFood(map);
+    {
+        // random food
+        detail::Draw(pg.PutRandomFood(), Tile::Food);
+    }
 
     std::deque<Position> snake;
     snake.push_front(Position(initial_pos_x, initial_pos_y));
@@ -160,7 +149,7 @@ int main()
         Position current_pos = snake.front();
         Position next_pos = current_pos.Step(dir);
 
-        if (detail::IsOutOfBoundary(next_pos, console_size_x, console_size_y))
+        if (pg.IsOutOfBoundary(next_pos))
         {
             break;
         }
@@ -172,19 +161,19 @@ int main()
             auto snake_front_tile = detail::DirectionToSnakeTile(dir);
             assert(snake_front_tile.has_value());
 
-            if (map.Get(next_pos) == Tile::Food)
+            if (pg.Get(next_pos) == Tile::Food)
             {
-                map.Set(next_pos, snake_front_tile.value());
+                pg.Set(next_pos, snake_front_tile.value());
                 detail::Draw(next_pos, snake_front_tile.value());
                 // next food
-                detail::PutRandomFood(map);
+                pg.PutRandomFood();
             }
             else
             {
                 // An open tile
-                map.Set(next_pos, snake_front_tile.value());
+                pg.Set(next_pos, snake_front_tile.value());
                 detail::Draw(next_pos, snake_front_tile.value());
-                map.Set(snake.back(), Tile::Open);
+                pg.Set(snake.back(), Tile::Open);
                 detail::Draw(snake.back(), Tile::Open);
 
                 snake.pop_back();
