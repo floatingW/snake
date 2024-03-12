@@ -1,11 +1,11 @@
 #include "utils.hpp"
 
-void utils::ResetScreen()
+void utils::ResetScreen() noexcept
 {
     endwin();
 }
 
-void utils::InitScreen()
+void utils::InitScreen() noexcept
 {
     initscr();
     cbreak();
@@ -15,7 +15,7 @@ void utils::InitScreen()
     curs_set(0);
 }
 
-void utils::Refresh()
+void utils::Refresh() noexcept
 {
     refresh();
 }

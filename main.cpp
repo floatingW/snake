@@ -1,7 +1,6 @@
 #include <deque>
 #include <optional>
 #include <cassert>
-#include <chrono> // milliseconds
 #include <thread> // sleepfor()
 
 #include "definition.hpp"
@@ -15,12 +14,13 @@ using Matrix = game_object::Matrix<Tile>;
 
 namespace detail
 {
-    auto TickToMilliSeconds(unsigned tick_per_sec)
+    auto TickToMilliSeconds(unsigned tick_per_sec) noexcept
     {
-        return static_cast<unsigned>(1.0 / tick_per_sec * 1000);
+        using namespace std::chrono_literals;
+        return 1.0 / tick_per_sec * 1ms;
     }
 
-    auto TileToChar(Tile v)
+    auto TileToChar(Tile v) noexcept
     {
         switch (v)
         {
@@ -42,17 +42,17 @@ namespace detail
         }
     }
 
-    auto Draw(int x, int y, Tile v)
+    auto Draw(int x, int y, Tile v) noexcept
     {
         utils::MoveCursorPrintf(y, x, "%c", detail::TileToChar(v));
     }
 
-    auto Draw(Position pos, Tile v)
+    auto Draw(Position pos, Tile v) noexcept
     {
         return Draw(pos.x, pos.y, v);
     }
 
-    std::optional<Direction> KeyToDirection(int ch)
+    auto KeyToDirection(int ch) noexcept -> std::optional<Direction>
     {
         switch (ch)
         {
@@ -64,12 +64,14 @@ namespace detail
             return Direction::Left;
         case 'd':
             return Direction::Right;
+        default:
+        {
+            return {};
         }
-
-        return {};
+        }
     }
 
-    std::optional<Tile> DirectionToSnakeTile(Direction dir)
+    auto DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>
     {
         switch (dir)
         {
@@ -81,22 +83,25 @@ namespace detail
             return Tile::SnakeLeft;
         case Direction::Right:
             return Tile::SnakeRight;
+        default:
+        {
+            return {};
         }
-
-        return {};
+        }
     }
 
 }
 
-int main()
+auto main() -> int
 {
     // init console
-    int console_size_y = 0;
-    int console_size_x = 0;
+    int console_size_y{};
+    int console_size_x{};
 
     utils::InitScreen();
     {
-        int row, col;
+        int row{};
+        int col{};
         getmaxyx(stdscr, row, col);
         console_size_x = col;
         console_size_y = row;
@@ -126,7 +131,7 @@ int main()
     }
 
     std::deque<Position> snake;
-    snake.push_front(Position(initial_pos_x, initial_pos_y));
+    snake.emplace_front(initial_pos_x, initial_pos_y);
 
     while (true)
     {
@@ -140,7 +145,7 @@ int main()
             auto optional_dir = detail::KeyToDirection(ch);
             if (optional_dir.has_value())
             {
-                dir = optional_dir.value();
+                dir = *optional_dir;
             }
         }
 
@@ -179,7 +184,7 @@ int main()
         }
 
         utils::Refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(detail::TickToMilliSeconds(2)));
+        std::this_thread::sleep_for(detail::TickToMilliSeconds(2));
     }
 
     utils::ResetScreen();

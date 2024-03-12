@@ -17,22 +17,22 @@ namespace game_object
 
     public:
         Matrix() = delete;
-        Matrix(size_t row, size_t col) :
+        Matrix(size_t row, size_t col) noexcept :
             row_(row), col_(col), data_(row, Row(col))
         {
         }
 
-        void Set(size_t r, size_t c, T v)
+        void Set(size_t r, size_t c, T v) noexcept
         {
             data_.at(r).at(c) = v;
         }
 
-        void Set(definition::Position pos, T v)
+        void Set(definition::Position pos, T v) noexcept
         {
             data_.at(pos.y).at(pos.x) = v;
         }
 
-        auto Get(definition::Position pos) const
+        auto Get(definition::Position pos) const noexcept
         {
             return data_.at(pos.y).at(pos.x);
         }
@@ -49,10 +49,10 @@ namespace game_object
             }
         }
 
-        definition::Position RandomPosition(T v) const
+        definition::Position RandomPosition(T v) const noexcept
         {
             std::vector<definition::Position> all;
-            ForEach([v, &all](auto element, auto r, auto c) {
+            ForEach([v, &all](auto element, auto r, auto c) noexcept {
                 if (element == v)
                 {
                     all.push_back(definition::Position(c, r));
@@ -65,7 +65,7 @@ namespace game_object
             return all[dis(gen)];
         }
 
-        bool IsOutOfBoundary(definition::Position pos) const
+        bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
             return pos.x < 0 || pos.x > static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y > static_cast<decltype(pos.y)>(row_);
         }
@@ -80,31 +80,31 @@ namespace game_object
     {
     public:
         template<typename... Ts>
-        PlayGround(Ts... args) :
+        PlayGround(Ts... args) noexcept :
             map(args...)
         {
         }
 
         template<typename... Ts>
-        void Set(Ts... args)
+        void Set(Ts... args) noexcept
         {
             map.Set(args...);
         }
 
         template<typename... Ts>
-        auto Get(Ts... args) const
+        auto Get(Ts... args) const noexcept
         {
             return map.Get(args...);
         }
 
-        definition::Position PutRandomFood()
+        definition::Position PutRandomFood() noexcept
         {
             auto random_pos = map.RandomPosition(Tile::Open);
             map.Set(random_pos, Tile::Food);
             return random_pos;
         }
 
-        bool IsOutOfBoundary(definition::Position pos) const
+        bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
             return map.IsOutOfBoundary(pos);
         }

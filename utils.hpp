@@ -7,12 +7,12 @@ namespace utils
 {
 
     // some ncurses routine
-    void InitScreen();
-    void ResetScreen();
-    void Refresh();
+    void InitScreen() noexcept;
+    void ResetScreen() noexcept;
+    void Refresh() noexcept;
 
     template<typename... Ts>
-    void MoveCursorPrintf(int y, int x, const char* fmt, Ts... args)
+    void MoveCursorPrintf(int y, int x, const char* fmt, Ts... args) noexcept
     {
         mvprintw(y, x, fmt, args...);
     }

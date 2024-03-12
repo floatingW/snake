@@ -16,15 +16,14 @@ namespace definition
 
     struct Position
     {
-        Position() = default;
-        Position(int x, int y) :
+        Position(int x, int y) noexcept :
             x(x), y(y)
         {
         }
         int x{};
         int y{};
 
-        Position Step(Direction dir) const
+        Position Step(Direction dir) const noexcept
         {
             Position p(*this);
             switch (dir)
