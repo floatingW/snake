@@ -17,7 +17,7 @@ namespace detail
     auto TickToMilliSeconds(unsigned tick_per_sec) noexcept
     {
         using namespace std::chrono_literals;
-        return 1.0 / tick_per_sec * 1ms;
+        return 1.0 / tick_per_sec * 1000ms;
     }
 
     auto TileToChar(Tile v) noexcept
