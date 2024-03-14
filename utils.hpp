@@ -13,9 +13,9 @@ namespace utils
     void Refresh() noexcept;
 
     template<typename... Ts>
-    void MoveCursorPrintf(int y, int x, const char* fmt, Ts... args) noexcept
+    void MoveCursorPrintf(Ts... args) noexcept
     {
-        mvprintw(y, x, fmt, args...);
+        mvprintw(args...);
     }
 
 }
