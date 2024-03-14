@@ -1,4 +1,5 @@
 #include <deque>
+#include <format>
 #include <optional>
 #include <cassert>
 #include <thread> // sleepfor()
@@ -11,6 +12,12 @@ using Tile = definition::Tile;
 using Position = definition::Position;
 using Direction = definition::Direction;
 using Matrix = game_object::Matrix<Tile>;
+
+namespace game_config
+{
+    constexpr auto MIN_CONSOLE_SIZE_X{ 90 };
+    constexpr auto MIN_CONSOLE_SIZE_Y{ 20 };
+}
 
 namespace detail
 {
@@ -90,22 +97,45 @@ namespace detail
         }
     }
 
+    bool SatisfiedConsoleSize(auto width, auto height) noexcept
+
+    {
+        if (width >= game_config::MIN_CONSOLE_SIZE_X && height >= game_config::MIN_CONSOLE_SIZE_Y)
+        {
+            return true;
+        }
+        else
+        {
+            utils::PrintExitMessage(std::format("console size too small, current: {}:{}, required: {}:{}",
+                                                width,
+                                                height,
+                                                game_config::MIN_CONSOLE_SIZE_X,
+                                                game_config::MIN_CONSOLE_SIZE_Y));
+            return false;
+        }
+    }
 }
 
 auto main() -> int
 {
     // init console
-    auto [console_size_x, console_size_y] = utils::InitScreen();
+    auto [console_width, console_height] = utils::InitScreen();
+    if (!detail::SatisfiedConsoleSize(console_width, console_height))
+    {
+        utils::ResetScreen();
+        return 0;
+    }
+
     utils::Refresh();
 
-    game_object::PlayGround pg{ console_size_y, console_size_x };
+    game_object::PlayGround pg{ console_height, console_width };
 
     // initial direction
     Direction dir{ Direction::Left };
 
     // initial pos
-    int initial_pos_x = console_size_x / 2;
-    int initial_pos_y = console_size_y / 2;
+    int initial_pos_x = console_width / 2;
+    int initial_pos_y = console_height / 2;
 
     {
         auto tile = detail::DirectionToSnakeTile(dir);
