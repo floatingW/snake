@@ -25,3 +25,12 @@ void utils::Refresh() noexcept
 {
     refresh();
 }
+
+void utils::PrintExitMessage(const std::string& message) noexcept
+{
+    utils::MoveCursorPrintf(0, 0, "%s", message.c_str());
+    utils::Refresh();
+
+    nodelay(stdscr, false);
+    getch();
+}

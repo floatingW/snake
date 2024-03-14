@@ -2,6 +2,7 @@
 #define __UTILS_HPP__
 
 #include <ncurses.h>
+#include <string>
 #include <utility>
 
 namespace utils
@@ -18,6 +19,7 @@ namespace utils
         mvprintw(args...);
     }
 
+    void PrintExitMessage(const std::string& message) noexcept;
 }
 
 #endif // __UTILS_HPP__
