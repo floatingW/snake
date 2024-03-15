@@ -97,7 +97,6 @@ namespace detail
     }
 
     auto SatisfiedConsoleSize(auto width, auto height) noexcept -> bool
-
     {
         if (width >= game_config::MIN_CONSOLE_SIZE_X && height >= game_config::MIN_CONSOLE_SIZE_Y)
         {
