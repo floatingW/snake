@@ -1,7 +1,9 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
+#include "definition.hpp"
 #include <ncurses.h>
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -20,6 +22,8 @@ namespace utils
     }
 
     void PrintExitMessage(const std::string& message) noexcept;
+
+    auto ReversedDirection(definition::Direction dir) noexcept -> std::optional<definition::Direction>;
 }
 
 #endif // __UTILS_HPP__
