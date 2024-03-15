@@ -1,4 +1,3 @@
-#include <deque>
 #include <format>
 #include <optional>
 #include <cassert>
@@ -149,8 +148,7 @@ auto main() -> int
         detail::Draw(pg.PutRandomFood(), Tile::Food);
     }
 
-    std::deque<Position> snake;
-    snake.emplace_front(initial_pos_x, initial_pos_y);
+    game_object::Snake snake_go{ initial_pos_x, initial_pos_y, dir };
 
     while (true)
     {
@@ -168,16 +166,13 @@ auto main() -> int
             }
         }
 
-        Position current_pos = snake.front();
-        Position next_pos = current_pos.Step(dir);
+        snake_go.SetDir(dir);
+        Position next_pos = snake_go.NextFrontPosition();
 
         if (pg.IsOutOfBoundary(next_pos))
         {
             break;
         }
-
-        // step forward
-        snake.push_front(next_pos);
 
         {
             auto snake_front_tile = detail::DirectionToSnakeTile(dir);
@@ -185,6 +180,7 @@ auto main() -> int
 
             if (pg.Get(next_pos) == Tile::Food)
             {
+                snake_go.Expand(next_pos);
                 pg.Set(next_pos, snake_front_tile.value());
                 detail::Draw(next_pos, snake_front_tile.value());
                 // next food
@@ -195,10 +191,10 @@ auto main() -> int
                 // An open tile
                 pg.Set(next_pos, snake_front_tile.value());
                 detail::Draw(next_pos, snake_front_tile.value());
-                pg.Set(snake.back(), Tile::Open);
-                detail::Draw(snake.back(), Tile::Open);
 
-                snake.pop_back();
+                auto snake_back = snake_go.Forward(next_pos);
+                pg.Set(snake_back, Tile::Open);
+                detail::Draw(snake_back, Tile::Open);
             }
         }
 

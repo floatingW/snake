@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_HPP__
 
 #include <cstddef>
+#include <deque>
 #include <vector>
 #include <random>
 #include <functional> // function
@@ -117,6 +118,58 @@ namespace game_object
         using Tile = definition::Tile;
         using Matrix = Matrix<definition::Tile>;
         Matrix map;
+    };
+
+    class Snake
+    {
+    public:
+        explicit Snake(definition::Position p, definition::Direction dir) noexcept :
+            dir_(dir)
+        {
+            data_.emplace_front(p);
+        }
+
+        Snake(int x, int y, definition::Direction dir) noexcept :
+            dir_(dir)
+        {
+            data_.emplace_front(x, y);
+        }
+
+        definition::Position FrontPosition() const noexcept
+        {
+            return data_.front();
+        }
+
+        definition::Position NextFrontPosition() const noexcept
+        {
+            return FrontPosition().Step(dir_);
+        }
+
+        void Expand(definition::Position pos) noexcept
+        {
+            data_.push_front(pos);
+        }
+
+        [[nodiscard]] definition::Position Forward(definition::Position pos) noexcept
+        {
+            Expand(pos);
+            auto back = data_.back();
+            data_.pop_back();
+            return back;
+        }
+
+        void SetDir(definition::Direction dir) noexcept
+        {
+            // FIXME: check input
+            dir_ = dir;
+        }
+
+    private:
+        using Position = definition::Position;
+        using Direction = definition::Direction;
+
+        std::deque<Position> data_;
+        Direction dir_{ Direction::Left };
     };
 
 }
