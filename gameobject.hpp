@@ -49,7 +49,7 @@ namespace game_object
             }
         }
 
-        definition::Position RandomPosition(T v) const noexcept
+        definition::Position RandomPosition(T v) noexcept
         {
             std::vector<definition::Position> all;
             ForEach([v, &all](auto element, auto r, auto c) noexcept {
@@ -59,9 +59,8 @@ namespace game_object
                 }
             });
 
-            std::mt19937 gen(seed_);
             std::uniform_int_distribution<> dis(0, all.size() - 1);
-            return all[dis(gen)];
+            return all[dis(random_gen_)];
         }
 
         bool IsOutOfBoundary(definition::Position pos) const noexcept
@@ -71,14 +70,14 @@ namespace game_object
 
         void SetSeed(std::mt19937::result_type seed) noexcept
         {
-            seed_ = seed;
+            random_gen_.seed(seed);
         }
 
     private:
         size_t row_{};
         size_t col_{};
         std::vector<Row> data_;
-        std::mt19937::result_type seed_{ 42 };
+        std::mt19937 random_gen_{ std::mt19937::result_type{ 42 } };
     };
 
     class PlayGround
