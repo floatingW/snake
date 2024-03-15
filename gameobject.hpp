@@ -49,7 +49,7 @@ namespace game_object
             }
         }
 
-        definition::Position RandomPosition(T v) noexcept
+        [[nodiscard]] definition::Position RandomPosition(T v) noexcept
         {
             std::vector<definition::Position> all;
             ForEach([v, &all](auto element, auto r, auto c) noexcept {
@@ -63,7 +63,7 @@ namespace game_object
             return all[dis(random_gen_)];
         }
 
-        bool IsOutOfBoundary(definition::Position pos) const noexcept
+        [[nodiscard]] bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
             return pos.x < 0 || pos.x > static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y > static_cast<decltype(pos.y)>(row_);
         }
@@ -101,14 +101,14 @@ namespace game_object
             return map.Get(args...);
         }
 
-        definition::Position PutRandomFood() noexcept
+        [[nodiscard]] definition::Position PutRandomFood() noexcept
         {
             auto random_pos = map.RandomPosition(Tile::Open);
             map.Set(random_pos, Tile::Food);
             return random_pos;
         }
 
-        bool IsOutOfBoundary(definition::Position pos) const noexcept
+        [[nodiscard]] bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
             return map.IsOutOfBoundary(pos);
         }
