@@ -3,7 +3,7 @@ project(cpp_demo)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-Og -g -fno-inline")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -g")
 
 find_package(Curses REQUIRED)
