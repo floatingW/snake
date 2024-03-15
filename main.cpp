@@ -188,7 +188,7 @@ auto main() -> int
                 pg.Set(next_pos, snake_front_tile.value());
                 detail::Draw(next_pos, snake_front_tile.value());
                 // next food
-                pg.PutRandomFood();
+                detail::Draw(pg.PutRandomFood(), definition::Tile::Food);
             }
             else
             {
