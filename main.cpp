@@ -96,22 +96,20 @@ namespace detail
         }
     }
 
-    bool SatisfiedConsoleSize(auto width, auto height) noexcept
+    auto SatisfiedConsoleSize(auto width, auto height) noexcept -> bool
 
     {
         if (width >= game_config::MIN_CONSOLE_SIZE_X && height >= game_config::MIN_CONSOLE_SIZE_Y)
         {
             return true;
         }
-        else
-        {
-            utils::PrintExitMessage(std::format("console size too small, current: {}:{}, required: {}:{}",
-                                                width,
-                                                height,
-                                                game_config::MIN_CONSOLE_SIZE_X,
-                                                game_config::MIN_CONSOLE_SIZE_Y));
-            return false;
-        }
+
+        utils::PrintExitMessage(std::format("console size too small, current: {}:{}, required: {}:{}",
+                                            width,
+                                            height,
+                                            game_config::MIN_CONSOLE_SIZE_X,
+                                            game_config::MIN_CONSOLE_SIZE_Y));
+        return false;
     }
 }
 
@@ -143,11 +141,8 @@ auto main() -> int
         detail::Draw(initial_pos_x, initial_pos_y, tile.value());
     }
 
-    {
-        // random food
-        detail::Draw(pg.PutRandomFood(), Tile::Food);
-    }
-
+    // random food
+    detail::Draw(pg.PutRandomFood(), Tile::Food);
     game_object::Snake snake_go{ initial_pos_x, initial_pos_y, dir };
 
     while (true)
