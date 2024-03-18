@@ -8,6 +8,7 @@
 #include <functional> // function
 
 #include "definition.hpp"
+#include "utils.hpp"
 
 namespace game_object
 {
@@ -158,10 +159,15 @@ namespace game_object
             return back;
         }
 
-        void SetDir(definition::Direction dir) noexcept
+        [[nodiscard]] auto SetDir(definition::Direction dir) noexcept
         {
-            // FIXME: check input
+            if (data_.size() > 1 && dir == utils::ReversedDirection(dir_))
+            {
+                return false;
+            }
+
             dir_ = dir;
+            return true;
         }
 
     private:
