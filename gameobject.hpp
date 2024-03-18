@@ -67,7 +67,7 @@ namespace game_object
 
         [[nodiscard]] bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
-            return pos.x < 0 || pos.x > static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y > static_cast<decltype(pos.y)>(row_);
+            return pos.x < 0 || pos.x >= static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y >= static_cast<decltype(pos.y)>(row_);
         }
 
         void SetSeed(std::mt19937::result_type seed) noexcept
