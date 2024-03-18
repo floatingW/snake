@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cpp_check_output=cpp_check_warning_output
+cpp_check_output=./build/cpp_check_warning_output
 rm $cpp_check_output
 
 cppcheck \
@@ -10,7 +10,7 @@ cppcheck \
 --output-file=$cpp_check_output \
 --xml
 
-clang_check_output=clang_check_warning_output
+clang_check_output=./build/clang_check_warning_output
 rm $clang_check_output
 
 run-clang-tidy \
