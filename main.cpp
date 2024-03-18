@@ -1,7 +1,8 @@
-#include <format>
 #include <optional>
 #include <cassert>
 #include <thread> // sleepfor()
+
+#include <ncurses.h>
 
 #include "definition.hpp"
 #include "gameobject.hpp"
@@ -14,8 +15,8 @@ using Matrix = game_object::Matrix<Tile>;
 
 namespace game_config
 {
-    constexpr auto MIN_CONSOLE_SIZE_X{ 90 };
-    constexpr auto MIN_CONSOLE_SIZE_Y{ 20 };
+    constexpr auto MIN_CONSOLE_WIDTH{ 90 };
+    constexpr auto MIN_CONSOLE_HEIGHT{ 20 };
 }
 
 namespace detail
@@ -96,42 +97,35 @@ namespace detail
         }
     }
 
-    auto SatisfiedConsoleSize(auto width, auto height) noexcept -> bool
-    {
-        if (width >= game_config::MIN_CONSOLE_SIZE_X && height >= game_config::MIN_CONSOLE_SIZE_Y)
-        {
-            return true;
-        }
-
-        utils::PrintExitMessage(std::format("console size too small, current: {}:{}, required: {}:{}",
-                                            width,
-                                            height,
-                                            game_config::MIN_CONSOLE_SIZE_X,
-                                            game_config::MIN_CONSOLE_SIZE_Y));
-        return false;
-    }
 }
 
 auto main() -> int
 {
+    auto game_width{ 100 };
+    auto game_height{ 30 };
+
     // init console
-    auto [console_width, console_height] = utils::InitScreen();
-    if (!detail::SatisfiedConsoleSize(console_width, console_height))
+    auto game_world_size = utils::InitScreen(game_width, game_height, game_config::MIN_CONSOLE_WIDTH, game_config::MIN_CONSOLE_HEIGHT);
+    if (!game_world_size)
     {
+        nodelay(stdscr, false);
+        getch();
         utils::ResetScreen();
         return 0;
     }
 
+    auto [game_world_width, game_world_height] = *game_world_size;
+
     utils::Refresh();
 
-    game_object::PlayGround pg{ console_height, console_width };
+    game_object::PlayGround pg{ game_world_height, game_world_width };
 
     // initial direction
     Direction dir{ Direction::Left };
 
     // initial pos
-    int initial_pos_x = console_width / 2;
-    int initial_pos_y = console_height / 2;
+    int initial_pos_x = game_world_width / 2;
+    int initial_pos_y = game_world_height / 2;
 
     {
         auto tile = detail::DirectionToSnakeTile(dir);

@@ -11,7 +11,7 @@ namespace utils
 {
 
     // some ncurses routine
-    auto InitScreen() noexcept -> std::pair<int, int>;
+    auto InitScreen(int game_width, int game_height, int min_width, int min_height) noexcept -> std::optional<std::pair<int, int>>;
     void ResetScreen() noexcept;
     void Refresh() noexcept;
 
