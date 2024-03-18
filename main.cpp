@@ -50,7 +50,7 @@ namespace detail
 
     auto Draw(int x, int y, Tile v) noexcept
     {
-        utils::MoveCursorPrintf(y, x, "%c", detail::TileToChar(v));
+        mvaddch(y, x, detail::TileToChar(v));
     }
 
     auto Draw(Position pos, Tile v) noexcept
@@ -154,13 +154,12 @@ auto main() -> int
             }
 
             auto optional_dir = detail::KeyToDirection(ch);
-            if (optional_dir.has_value())
+            if (optional_dir.has_value() && snake_go.SetDir(*optional_dir))
             {
                 dir = *optional_dir;
             }
         }
 
-        snake_go.SetDir(dir);
         Position next_pos = snake_go.NextFrontPosition();
 
         if (pg.IsOutOfBoundary(next_pos))
