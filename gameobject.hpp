@@ -82,43 +82,44 @@ namespace game_object
         std::mt19937 random_gen_{ std::mt19937::result_type{ 42 } };
     };
 
+    class Snake;
     class PlayGround
     {
     public:
         template<typename... Ts>
         PlayGround(Ts... args) noexcept :
-            map(args...)
+            map_(args...)
         {
         }
 
         template<typename... Ts>
         void Set(Ts... args) noexcept
         {
-            map.Set(args...);
+            map_.Set(args...);
         }
 
         template<typename... Ts>
         auto Get(Ts... args) const noexcept
         {
-            return map.Get(args...);
+            return map_.Get(args...);
         }
 
         [[nodiscard]] definition::Position PutRandomFood() noexcept
         {
-            auto random_pos = map.RandomPosition(Tile::Open);
-            map.Set(random_pos, Tile::Food);
+            auto random_pos = map_.RandomPosition(Tile::Open);
+            map_.Set(random_pos, Tile::Food);
             return random_pos;
         }
 
         [[nodiscard]] bool IsOutOfBoundary(definition::Position pos) const noexcept
         {
-            return map.IsOutOfBoundary(pos);
+            return map_.IsOutOfBoundary(pos);
         }
 
     private:
         using Tile = definition::Tile;
         using Matrix = Matrix<definition::Tile>;
-        Matrix map;
+        Matrix map_;
     };
 
     class Snake
