@@ -125,7 +125,7 @@ namespace game_object
     class Snake
     {
     public:
-        explicit Snake(definition::Position p, definition::Direction dir) noexcept :
+        Snake(definition::Position p, definition::Direction dir) noexcept :
             dir_(dir)
         {
             data_.emplace_front(p);
