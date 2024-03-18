@@ -11,7 +11,7 @@ namespace utils
 {
 
     // some ncurses routine
-    std::pair<int, int> InitScreen() noexcept;
+    auto InitScreen() noexcept -> std::pair<int, int>;
     void ResetScreen() noexcept;
     void Refresh() noexcept;
 
