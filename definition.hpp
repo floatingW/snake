@@ -48,6 +48,11 @@ namespace definition
 
             return p;
         }
+
+        auto operator==(const Position& other) const noexcept
+        {
+            return other.x == x && other.y == y;
+        }
     };
 
     enum class Tile
