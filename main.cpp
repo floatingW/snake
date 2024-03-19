@@ -40,6 +40,13 @@ namespace detail
         }
     }
 
+    void Wait() noexcept
+    {
+        nodelay(stdscr, false);
+        getch();
+        utils::ResetScreen();
+    }
+
 }
 
 auto main() -> int
@@ -51,29 +58,16 @@ auto main() -> int
     auto game_world_size = utils::InitScreen(game_width, game_height, game_config::MIN_CONSOLE_WIDTH, game_config::MIN_CONSOLE_HEIGHT);
     if (!game_world_size)
     {
-        nodelay(stdscr, false);
-        getch();
-        utils::ResetScreen();
+        detail::Wait();
         return 0;
     }
 
-    auto [game_world_width, game_world_height] = *game_world_size;
-
     utils::Refresh();
 
+    auto [game_world_width, game_world_height] = *game_world_size;
     game_object::PlayGround pg{ game_world_height, game_world_width };
     pg.PutRandomFood();
-
-    // initial direction
-    Direction dir{ Direction::Left };
-
-    {
-        // initial pos
-        int initial_pos_x = game_world_width / 2;
-        int initial_pos_y = game_world_height / 2;
-
-        pg.AddSnake(Position{ initial_pos_x, initial_pos_y }, dir);
-    }
+    pg.AddSnake(Position{ game_world_width / 2, game_world_height / 2 }, Direction::Left);
 
     while (true)
     {
@@ -87,8 +81,7 @@ auto main() -> int
             auto optional_dir = detail::KeyToDirection(ch);
             if (optional_dir)
             {
-                dir = *optional_dir;
-                pg.SetSnakeDir(definition::PlayerID{ 0 }, dir);
+                pg.SetSnakeDir(definition::PlayerID{ 0 }, *optional_dir);
             }
         }
 
