@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <deque>
+#include <optional>
 #include <vector>
 #include <random>
 #include <functional> // function
@@ -104,11 +105,11 @@ namespace game_object
             return map_.Get(args...);
         }
 
-        [[nodiscard]] definition::Position PutRandomFood() noexcept
+        void PutRandomFood() noexcept
         {
             auto random_pos = map_.RandomPosition(Tile::Open);
             map_.Set(random_pos, Tile::Food);
-            return random_pos;
+            utils::Draw(random_pos, Tile::Food);
         }
 
         [[nodiscard]] bool IsOutOfBoundary(definition::Position pos) const noexcept
@@ -116,10 +117,30 @@ namespace game_object
             return map_.IsOutOfBoundary(pos);
         }
 
+        auto AddSnake(definition::Position pos, definition::Direction dir) noexcept -> definition::PlayerID;
+        auto SetSnakeDir(definition::PlayerID id, definition::Direction dir) noexcept -> bool;
+        auto Step() -> bool;
+
     private:
         using Tile = definition::Tile;
         using Matrix = Matrix<definition::Tile>;
         Matrix map_;
+        std::vector<Snake> snakes_;
+
+        auto GetSnake(definition::PlayerID id) noexcept -> Snake* { return GetSnakeImpl(*this, id); }
+        inline auto GetSnake(definition::PlayerID id) const noexcept -> const Snake* { return GetSnakeImpl(*this, id); }
+
+        template<typename T>
+        static auto GetSnakeImpl(T& t, definition::PlayerID id) noexcept -> decltype(&t.snakes_[0])
+        {
+            auto index = static_cast<size_t>(id);
+            if (index < t.snakes_.size())
+            {
+                return &t.snakes_[index];
+            }
+
+            return {};
+        }
     };
 
     class Snake
@@ -171,12 +192,17 @@ namespace game_object
             return true;
         }
 
+        definition::Direction Dir() const { return dir_; }
+        auto Dead() const { return dead_; }
+        void Die() { dead_ = true; }
+
     private:
         using Position = definition::Position;
         using Direction = definition::Direction;
 
         std::deque<Position> data_;
         Direction dir_{ Direction::Left };
+        bool dead_{ false };
     };
 
 }

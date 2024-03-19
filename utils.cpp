@@ -144,3 +144,23 @@ auto utils::ReversedDirection(definition::Direction dir) noexcept -> std::option
         return {};
     }
 }
+
+auto utils::DirectionToSnakeTile(definition::Direction dir) noexcept -> std::optional<definition::Tile>
+{
+    using namespace definition;
+    switch (dir)
+    {
+    case Direction::Up:
+        return Tile::SnakeUp;
+    case Direction::Down:
+        return Tile::SnakeDown;
+    case Direction::Left:
+        return Tile::SnakeLeft;
+    case Direction::Right:
+        return Tile::SnakeRight;
+    default:
+    {
+        return {};
+    }
+    }
+}
