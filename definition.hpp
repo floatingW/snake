@@ -2,6 +2,7 @@
 #define __DEFINITION_HPP__
 
 #include <cassert>
+#include <cstddef>
 
 namespace definition
 {
@@ -63,6 +64,28 @@ namespace definition
         SnakeLeft,
         SnakeRight,
         Food
+    };
+
+    class PlayerID
+    {
+    public:
+        explicit PlayerID(int id) :
+            id_(id)
+        {
+        }
+
+        explicit PlayerID(std::size_t id) :
+            id_(static_cast<int>(id))
+        {
+        }
+
+        operator size_t()
+        {
+            return id_;
+        }
+
+    private:
+        int id_;
     };
 
 }
