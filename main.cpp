@@ -1,5 +1,4 @@
 #include <optional>
-#include <cassert>
 #include <thread> // sleepfor()
 
 #include <ncurses.h>

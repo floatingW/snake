@@ -1,5 +1,6 @@
 #include "gameobject.hpp"
 #include <cstddef>
+#include <cassert>
 
 auto game_object::PlayGround::AddSnake(definition::Position pos, definition::Direction dir) noexcept -> definition::PlayerID
 {
