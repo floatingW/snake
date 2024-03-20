@@ -1,18 +1,18 @@
-#include "gameobject.hpp"
-#include <cstddef>
-#include <cassert>
+#include "playground.hpp"
 
-auto game_object::PlayGround::AddSnake(definition::Position pos, definition::Direction dir) noexcept -> definition::PlayerID
+using namespace game;
+
+auto PlayGround::AddSnake(Position pos, Direction dir) noexcept -> PlayerID
 {
     auto tile = utils::DirectionToSnakeTile(dir);
     assert(tile);
     Set(pos, *tile);
     utils::Draw(pos, tile.value());
     snakes_.emplace_back(pos, dir);
-    return definition::PlayerID{ snakes_.size() };
+    return PlayerID{ snakes_.size() };
 }
 
-auto game_object::PlayGround::SetSnakeDir(definition::PlayerID id, definition::Direction dir) noexcept -> bool
+auto PlayGround::SetSnakeDir(PlayerID id, Direction dir) noexcept -> bool
 {
     auto* snake = GetSnake(id);
     if (snake != nullptr)
@@ -23,9 +23,8 @@ auto game_object::PlayGround::SetSnakeDir(definition::PlayerID id, definition::D
     return false;
 }
 
-auto game_object::PlayGround::Step() -> bool
+auto PlayGround::Step() -> bool
 {
-    using namespace definition;
     size_t dead_num{ 0 };
     for (auto& snake_go : snakes_)
     {

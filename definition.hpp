@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cstddef>
 
-namespace definition
+namespace game
 {
 
     enum class Direction

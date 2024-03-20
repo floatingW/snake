@@ -5,6 +5,8 @@
 #include <format>
 #include <utility>
 
+using namespace game;
+
 namespace detail
 {
     struct WinBorder
@@ -128,26 +130,25 @@ void utils::PrintExitMessage(const std::string& message) noexcept
     getch();
 }
 
-auto utils::ReversedDirection(definition::Direction dir) noexcept -> std::optional<definition::Direction>
+auto utils::ReversedDirection(Direction dir) noexcept -> std::optional<Direction>
 {
     switch (dir)
     {
-    case definition::Direction::Up:
-        return definition::Direction::Down;
-    case definition::Direction::Down:
-        return definition::Direction::Up;
-    case definition::Direction::Left:
-        return definition::Direction::Right;
-    case definition::Direction::Right:
-        return definition::Direction::Left;
+    case Direction::Up:
+        return Direction::Down;
+    case Direction::Down:
+        return Direction::Up;
+    case Direction::Left:
+        return Direction::Right;
+    case Direction::Right:
+        return Direction::Left;
     default:
         return {};
     }
 }
 
-auto utils::DirectionToSnakeTile(definition::Direction dir) noexcept -> std::optional<definition::Tile>
+auto utils::DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>
 {
-    using namespace definition;
     switch (dir)
     {
     case Direction::Up:

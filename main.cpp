@@ -4,13 +4,8 @@
 #include <ncurses.h>
 
 #include "definition.hpp"
-#include "gameobject.hpp"
+#include "playground.hpp"
 #include "utils.hpp"
-
-using Tile = definition::Tile;
-using Position = definition::Position;
-using Direction = definition::Direction;
-using Matrix = game_object::Matrix<Tile>;
 
 namespace game_config
 {
@@ -20,18 +15,18 @@ namespace game_config
 
 namespace detail
 {
-    auto KeyToDirection(int ch) noexcept -> std::optional<Direction>
+    auto KeyToDirection(int ch) noexcept -> std::optional<game::Direction>
     {
         switch (ch)
         {
         case 'w':
-            return Direction::Up;
+            return game::Direction::Up;
         case 's':
-            return Direction::Down;
+            return game::Direction::Down;
         case 'a':
-            return Direction::Left;
+            return game::Direction::Left;
         case 'd':
-            return Direction::Right;
+            return game::Direction::Right;
         default:
         {
             return {};
@@ -43,7 +38,7 @@ namespace detail
     {
         nodelay(stdscr, false);
         getch();
-        utils::ResetScreen();
+        game::utils::ResetScreen();
     }
 
 }
@@ -54,19 +49,19 @@ auto main() -> int
     auto game_height{ 30 };
 
     // init console
-    auto game_world_size = utils::InitScreen(game_width, game_height, game_config::MIN_CONSOLE_WIDTH, game_config::MIN_CONSOLE_HEIGHT);
+    auto game_world_size = game::utils::InitScreen(game_width, game_height, game_config::MIN_CONSOLE_WIDTH, game_config::MIN_CONSOLE_HEIGHT);
     if (!game_world_size)
     {
         detail::Wait();
         return 0;
     }
 
-    utils::Refresh();
+    game::utils::Refresh();
 
     auto [game_world_width, game_world_height] = *game_world_size;
-    game_object::PlayGround pg{ game_world_height, game_world_width };
+    game::PlayGround pg{ game_world_height, game_world_width };
     pg.PutRandomFood();
-    pg.AddSnake(Position{ game_world_width / 2, game_world_height / 2 }, Direction::Left);
+    pg.AddSnake(game::Position{ game_world_width / 2, game_world_height / 2 }, game::Direction::Left);
 
     while (true)
     {
@@ -80,7 +75,7 @@ auto main() -> int
             auto optional_dir = detail::KeyToDirection(ch);
             if (optional_dir)
             {
-                pg.SetSnakeDir(definition::PlayerID{ 0 }, *optional_dir);
+                pg.SetSnakeDir(game::PlayerID{ 0 }, *optional_dir);
             }
         }
 
@@ -89,10 +84,10 @@ auto main() -> int
             break;
         }
 
-        utils::Refresh();
-        std::this_thread::sleep_for(utils::TickToMilliSeconds(2));
+        game::utils::Refresh();
+        std::this_thread::sleep_for(game::utils::TickToMilliSeconds(2));
     }
 
-    utils::ResetScreen();
+    game::utils::ResetScreen();
     return 0;
 }
