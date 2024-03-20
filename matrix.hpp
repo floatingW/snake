@@ -17,22 +17,22 @@ namespace game
 
     public:
         Matrix() = delete;
-        Matrix(size_t row, size_t col) noexcept :
+        Matrix(size_t row, size_t col) :
             row_(row), col_(col), data_(row, Row(col))
         {
         }
 
-        void Set(size_t r, size_t c, T v) noexcept
+        void Set(size_t r, size_t c, T v)
         {
             data_.at(r).at(c) = v;
         }
 
-        void Set(Position pos, T v) noexcept
+        void Set(Position pos, T v)
         {
             data_.at(pos.y).at(pos.x) = v;
         }
 
-        auto Get(Position pos) const noexcept
+        auto Get(Position pos) const
         {
             return data_.at(pos.y).at(pos.x);
         }
@@ -49,10 +49,10 @@ namespace game
             }
         }
 
-        [[nodiscard]] Position RandomPosition(T v) noexcept
+        [[nodiscard]] Position RandomPosition(T v)
         {
             std::vector<Position> all;
-            ForEach([v, &all](auto element, auto r, auto c) noexcept {
+            ForEach([v, &all](auto element, auto r, auto c) {
                 if (element == v)
                 {
                     all.push_back(Position(c, r));
@@ -63,12 +63,12 @@ namespace game
             return all[dis(random_gen_)];
         }
 
-        [[nodiscard]] bool IsOutOfBoundary(Position pos) const noexcept
+        [[nodiscard]] bool IsOutOfBoundary(Position pos) const
         {
             return pos.x < 0 || pos.x >= static_cast<decltype(pos.x)>(col_) || pos.y < 0 || pos.y >= static_cast<decltype(pos.y)>(row_);
         }
 
-        void SetSeed(std::mt19937::result_type seed) noexcept
+        void SetSeed(std::mt19937::result_type seed)
         {
             random_gen_.seed(seed);
         }

@@ -60,7 +60,7 @@ namespace detail
         mvvline(y + 1, x + w - 1, p_win->border.rs, h - 2);
     }
 
-    auto SatisfiedConsoleSize(int width, int height, int min_width, int min_height) noexcept -> bool
+    auto SatisfiedConsoleSize(int width, int height, int min_width, int min_height) -> bool
     {
         if (width >= min_width && height >= min_height)
         {
@@ -76,12 +76,12 @@ namespace detail
     }
 }
 
-void utils::ResetScreen() noexcept
+void utils::ResetScreen()
 {
     endwin();
 }
 
-auto utils::InitScreen(int game_width, int game_height, int min_width, int min_height) noexcept -> std::optional<std::pair<int, int>>
+auto utils::InitScreen(int game_width, int game_height, int min_width, int min_height) -> std::optional<std::pair<int, int>>
 {
     initscr();
     cbreak();
@@ -116,12 +116,12 @@ auto utils::InitScreen(int game_width, int game_height, int min_width, int min_h
     return { std::make_pair(game_width, game_height) };
 }
 
-void utils::Refresh() noexcept
+void utils::Refresh()
 {
     refresh();
 }
 
-void utils::PrintExitMessage(const std::string& message) noexcept
+void utils::PrintExitMessage(const std::string& message)
 {
     utils::MoveCursorPrintf(0, 0, "%s", message.c_str());
     utils::Refresh();
@@ -130,7 +130,7 @@ void utils::PrintExitMessage(const std::string& message) noexcept
     getch();
 }
 
-auto utils::ReversedDirection(Direction dir) noexcept -> std::optional<Direction>
+auto utils::ReversedDirection(Direction dir) -> std::optional<Direction>
 {
     switch (dir)
     {
@@ -147,7 +147,7 @@ auto utils::ReversedDirection(Direction dir) noexcept -> std::optional<Direction
     }
 }
 
-auto utils::DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>
+auto utils::DirectionToSnakeTile(Direction dir) -> std::optional<Tile>
 {
     switch (dir)
     {
@@ -166,7 +166,7 @@ auto utils::DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>
     }
 }
 
-auto utils::TileToChar(Tile v) noexcept
+auto utils::TileToChar(Tile v)
 {
     switch (v)
     {
@@ -188,17 +188,17 @@ auto utils::TileToChar(Tile v) noexcept
     }
 }
 
-void utils::Draw(int x, int y, Tile v) noexcept
+void utils::Draw(int x, int y, Tile v)
 {
     mvaddch(y, x, TileToChar(v));
 }
 
-void utils::Draw(Position pos, Tile v) noexcept
+void utils::Draw(Position pos, Tile v)
 {
     Draw(pos.x, pos.y, v);
 }
 
-auto utils::KeyToDirection(int ch) noexcept -> std::optional<Direction>
+auto utils::KeyToDirection(int ch) -> std::optional<Direction>
 {
     switch (ch)
     {
@@ -217,7 +217,7 @@ auto utils::KeyToDirection(int ch) noexcept -> std::optional<Direction>
     }
 }
 
-void utils::Wait() noexcept
+void utils::Wait()
 {
     nodelay(stdscr, false);
     getch();

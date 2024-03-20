@@ -2,7 +2,7 @@
 
 using namespace game;
 
-auto PlayGround::AddSnake(Position pos, Direction dir) noexcept -> PlayerID
+auto PlayGround::AddSnake(Position pos, Direction dir) -> PlayerID
 {
     auto tile = utils::DirectionToSnakeTile(dir);
     assert(tile);
@@ -12,7 +12,7 @@ auto PlayGround::AddSnake(Position pos, Direction dir) noexcept -> PlayerID
     return PlayerID{ snakes_.size() };
 }
 
-auto PlayGround::SetSnakeDir(PlayerID id, Direction dir) noexcept -> bool
+auto PlayGround::SetSnakeDir(PlayerID id, Direction dir) -> bool
 {
     auto* snake = GetSnake(id);
     if (snake != nullptr)

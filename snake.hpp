@@ -11,34 +11,34 @@ namespace game
     class Snake
     {
     public:
-        Snake(Position p, Direction dir) noexcept :
+        Snake(Position p, Direction dir) :
             dir_(dir)
         {
             data_.emplace_front(p);
         }
 
-        Snake(int x, int y, Direction dir) noexcept :
+        Snake(int x, int y, Direction dir) :
             dir_(dir)
         {
             data_.emplace_front(x, y);
         }
 
-        Position FrontPosition() const noexcept
+        Position FrontPosition() const
         {
             return data_.front();
         }
 
-        Position NextFrontPosition() const noexcept
+        Position NextFrontPosition() const
         {
             return FrontPosition().Step(dir_);
         }
 
-        void Expand(Position pos) noexcept
+        void Expand(Position pos)
         {
             data_.push_front(pos);
         }
 
-        [[nodiscard]] Position Forward(Position pos) noexcept
+        [[nodiscard]] Position Forward(Position pos)
         {
             Expand(pos);
             auto back = data_.back();
@@ -46,7 +46,7 @@ namespace game
             return back;
         }
 
-        [[nodiscard]] auto SetDir(Direction dir) noexcept
+        [[nodiscard]] auto SetDir(Direction dir)
         {
             if (data_.size() > 1 && dir == utils::ReversedDirection(dir_))
             {

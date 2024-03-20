@@ -17,14 +17,14 @@ namespace game
 
     struct Position
     {
-        Position(int x, int y) noexcept :
+        Position(int x, int y) :
             x(x), y(y)
         {
         }
         int x{};
         int y{};
 
-        Position Step(Direction dir) const noexcept
+        Position Step(Direction dir) const
         {
             Position p(*this);
             switch (dir)
@@ -50,7 +50,7 @@ namespace game
             return p;
         }
 
-        auto operator==(const Position& other) const noexcept
+        auto operator==(const Position& other) const
         {
             return other.x == x && other.y == y;
         }

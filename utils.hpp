@@ -13,37 +13,37 @@ namespace game
     {
 
         // some ncurses routine
-        auto InitScreen(int game_width, int game_height, int min_width, int min_height) noexcept -> std::optional<std::pair<int, int>>;
-        void ResetScreen() noexcept;
-        void Refresh() noexcept;
+        auto InitScreen(int game_width, int game_height, int min_width, int min_height) -> std::optional<std::pair<int, int>>;
+        void ResetScreen();
+        void Refresh();
 
         template<typename... Ts>
-        void MoveCursorPrintf(Ts... args) noexcept
+        void MoveCursorPrintf(Ts... args)
         {
             mvprintw(args...);
         }
 
-        void PrintExitMessage(const std::string& message) noexcept;
+        void PrintExitMessage(const std::string& message);
 
-        auto ReversedDirection(Direction dir) noexcept -> std::optional<Direction>;
+        auto ReversedDirection(Direction dir) -> std::optional<Direction>;
 
-        auto DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>;
+        auto DirectionToSnakeTile(Direction dir) -> std::optional<Tile>;
 
-        inline auto TickToMilliSeconds(unsigned tick_per_sec) noexcept
+        inline auto TickToMilliSeconds(unsigned tick_per_sec)
         {
             using namespace std::literals::chrono_literals;
             return 1.0 / tick_per_sec * 1000ms;
         }
 
-        auto TileToChar(Tile v) noexcept;
+        auto TileToChar(Tile v);
 
-        void Draw(int x, int y, Tile v) noexcept;
+        void Draw(int x, int y, Tile v);
 
-        void Draw(Position pos, Tile v) noexcept;
+        void Draw(Position pos, Tile v);
 
-        auto KeyToDirection(int ch) noexcept -> std::optional<Direction>;
+        auto KeyToDirection(int ch) -> std::optional<Direction>;
 
-        void Wait() noexcept;
+        void Wait();
     }
 }
 
