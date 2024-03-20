@@ -13,36 +13,6 @@ namespace game_config
     constexpr auto MIN_CONSOLE_HEIGHT{ 20 };
 }
 
-namespace detail
-{
-    auto KeyToDirection(int ch) noexcept -> std::optional<game::Direction>
-    {
-        switch (ch)
-        {
-        case 'w':
-            return game::Direction::Up;
-        case 's':
-            return game::Direction::Down;
-        case 'a':
-            return game::Direction::Left;
-        case 'd':
-            return game::Direction::Right;
-        default:
-        {
-            return {};
-        }
-        }
-    }
-
-    void Wait() noexcept
-    {
-        nodelay(stdscr, false);
-        getch();
-        game::utils::ResetScreen();
-    }
-
-}
-
 auto main() -> int
 {
     auto game_width{ 100 };
@@ -52,7 +22,7 @@ auto main() -> int
     auto game_world_size = game::utils::InitScreen(game_width, game_height, game_config::MIN_CONSOLE_WIDTH, game_config::MIN_CONSOLE_HEIGHT);
     if (!game_world_size)
     {
-        detail::Wait();
+        game::utils::Wait();
         return 0;
     }
 
@@ -72,7 +42,7 @@ auto main() -> int
                 break;
             }
 
-            auto optional_dir = detail::KeyToDirection(ch);
+            auto optional_dir = game::utils::KeyToDirection(ch);
             if (optional_dir)
             {
                 pg.SetSnakeDir(game::PlayerID{ 0 }, *optional_dir);

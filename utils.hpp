@@ -5,7 +5,6 @@
 #include <ncurses.h>
 #include <optional>
 #include <string>
-#include <utility>
 #include <chrono>
 
 namespace game
@@ -36,38 +35,15 @@ namespace game
             return 1.0 / tick_per_sec * 1000ms;
         }
 
-        inline auto TileToChar(Tile v) noexcept
-        {
-            switch (v)
-            {
-            case Tile::Open:
-                return ' ';
-            case Tile::SnakeUp:
-                return '^';
-            case Tile::SnakeDown:
-                return 'v';
-            case Tile::SnakeLeft:
-                return '<';
-            case Tile::SnakeRight:
-                return '>';
-            case Tile::Food:
-                return '@';
-            default:
-                assert(false);
-                return '#';
-            }
-        }
+        auto TileToChar(Tile v) noexcept;
 
-        inline auto Draw(int x, int y, Tile v) noexcept
-        {
-            mvaddch(y, x, TileToChar(v));
-        }
+        void Draw(int x, int y, Tile v) noexcept;
 
-        inline auto Draw(Position pos, Tile v) noexcept
-        {
-            return Draw(pos.x, pos.y, v);
-        }
+        void Draw(Position pos, Tile v) noexcept;
 
+        auto KeyToDirection(int ch) noexcept -> std::optional<Direction>;
+
+        void Wait() noexcept;
     }
 }
 

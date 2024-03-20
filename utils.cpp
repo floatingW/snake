@@ -165,3 +165,61 @@ auto utils::DirectionToSnakeTile(Direction dir) noexcept -> std::optional<Tile>
     }
     }
 }
+
+auto utils::TileToChar(Tile v) noexcept
+{
+    switch (v)
+    {
+    case Tile::Open:
+        return ' ';
+    case Tile::SnakeUp:
+        return '^';
+    case Tile::SnakeDown:
+        return 'v';
+    case Tile::SnakeLeft:
+        return '<';
+    case Tile::SnakeRight:
+        return '>';
+    case Tile::Food:
+        return '@';
+    default:
+        assert(false);
+        return '#';
+    }
+}
+
+void utils::Draw(int x, int y, Tile v) noexcept
+{
+    mvaddch(y, x, TileToChar(v));
+}
+
+void utils::Draw(Position pos, Tile v) noexcept
+{
+    Draw(pos.x, pos.y, v);
+}
+
+auto utils::KeyToDirection(int ch) noexcept -> std::optional<Direction>
+{
+    switch (ch)
+    {
+    case 'w':
+        return Direction::Up;
+    case 's':
+        return Direction::Down;
+    case 'a':
+        return Direction::Left;
+    case 'd':
+        return Direction::Right;
+    default:
+    {
+        return {};
+    }
+    }
+}
+
+void utils::Wait() noexcept
+{
+    nodelay(stdscr, false);
+    getch();
+    game::utils::ResetScreen();
+}
