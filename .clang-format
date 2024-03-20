@@ -41,3 +41,4 @@ SortIncludes: false
 SpaceAfterTemplateKeyword: false
 SpacesInAngles: false
 SpacesInContainerLiterals: false
+InsertNewlineAtEOF: true
